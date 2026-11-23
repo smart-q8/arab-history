@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تاريخ الوطن العربي خلال ١٤ قرنًا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#2b211c;--paper:#fbf8f1;--frame:#6b1f1a;--muted:#7a6d63;--line:#e7e0d2}
+  *{box-sizing:border-box}
+  body{margin:0;background:#efe9dd;color:var(--ink);font-family:"Cairo",system-ui,sans-serif}
+  header{background:var(--frame);color:#fff;padding:22px 20px 18px;text-align:center}
+  header h1{margin:0;font-family:"Reem Kufi","Cairo",sans-serif;font-size:clamp(26px,4.2vw,46px);letter-spacing:.5px}
+  header p{margin:6px 0 0;opacity:.85;font-size:14px}
+  .bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
+       padding:10px 14px;background:rgba(251,248,241,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(4px)}
+  .bar input{font:inherit;padding:6px 12px;border:1px solid #d6ccb8;border-radius:8px;min-width:220px;background:#fff}
+  .seg{display:inline-flex;border:1px solid #d6ccb8;border-radius:8px;overflow:hidden}
+  .seg button{font:inherit;font-size:13px;border:0;background:#fff;padding:6px 12px;cursor:pointer;color:var(--ink)}
+  .seg button.on{background:var(--frame);color:#fff}
+  .clear{font:inherit;font-size:13px;border:1px solid #d6ccb8;background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer}
+  .wrap{overflow-x:auto;padding:14px 10px 4px}
+  svg{display:block;margin:0 auto;background:var(--paper);box-shadow:0 1px 0 #d8cfbe,0 8px 30px rgba(60,30,10,.08)}
+  .cell{stroke:#fff;stroke-width:.8;cursor:pointer;transition:opacity .15s}
+  .dim .cell{opacity:.18}
+  .dim .cell.hl{opacity:1;stroke:#2b211c;stroke-width:1.2}
+  .dim .lbl{opacity:.15}.dim .lbl.hl{opacity:1}
+  .lbl{pointer-events:none;font-family:"Cairo",sans-serif;font-weight:600}
+  .yr{pointer-events:none;font-family:"Cairo",sans-serif;font-size:8.5px;opacity:.75}
+  .axis text{font-size:10px;fill:var(--muted);font-family:"Cairo",sans-serif}
+  .head text{font-family:"Reem Kufi","Cairo",sans-serif;font-weight:700;fill:#fff}
+  #tip{position:fixed;z-index:10;pointer-events:none;background:#2b211c;color:#fff;border-radius:8px;padding:8px 11px;
+       font-size:13px;line-height:1.55;max-width:280px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:none}
+  #tip b{font-size:14px}#tip .s{opacity:.75;font-size:12px}
+  section.legend{max-width:1400px;margin:18px auto 10px;padding:0 16px}
+  section.legend h2{font-size:17px;margin:0 0 4px}
+  section.legend p{margin:0 0 10px;color:var(--muted);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;background:#fff;border:1px solid var(--line);
+        border-radius:999px;padding:3px 10px 3px 8px;cursor:pointer;user-select:none}
+  .chip i{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.12)}
+  .chip.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+  footer{max-width:1400px;margin:8px auto 30px;padding:0 16px;color:var(--muted);font-size:12.5px;line-height:1.8}
+</style>
+</head>
+<body>
+<header>
+  <h1>تاريخ الوطن العربي خلال ١٤ قرنًا</h1>
+  <p>الدول والإمبراطوريات التي حكمت أقطار الوطن العربي من الهجرة (١ هـ / ٦٢٢ م) حتى ١٤٣١ هـ / ٢٠١٠ م</p>
+</header>
+<div class="bar">
+  <input id="q" type="search" placeholder="ابحث عن دولة أو أسرة حاكمة… مثل: العثمانيون">
+  <div class="seg" id="scale">
+    <button data-s="var" class="on">مقياس متدرّج</button>
+    <button data-s="lin">مقياس خطي</button>
+  </div>
+  <button class="clear" id="clr">إلغاء التحديد</button>
+</div>
+<div class="wrap"><svg id="chart"></svg></div>
+<section class="legend">
+  <h2>الدول والأسر الحاكمة</h2>
+  <p>اضغط على أي اسم لإبراز امتداده عبر الأقطار والقرون، واضغط على أي خانة في المخطط لقراءة صفحة تلك الحقبة في ذلك القطر.</p>
+  <div class="chips" id="chips"></div>
+</section>
+<footer>
+  المحور الأيمن بالتقويم الهجري والأيسر بالميلادي. في «المقياس المتدرّج» تُعطى القرون الأخيرة مساحة أكبر لكثرة أحداثها، كما في الخرائط الزمنية المطبوعة؛ و«المقياس الخطي» يعطي كل سنة المساحة نفسها.
+  التواريخ تقريبية في بعض الفترات، وتمثّل الخانة القوة المسيطرة على معظم القطر أو مركزه، وقد تتداخل السيادة الاسمية مع الحكم المحلي.
+</footer>
+<div id="tip"></div>
+<script>
+const COUNTRIES = [
+  ["iq","العراق"],["sa","السعودية"],["om","عُمان"],["ae","الإمارات"],["qa","قطر"],["bh","البحرين"],["kw","الكويت"],
+  ["yeN","اليمن (الشمال)"],["yeS","اليمن (الجنوب)"],["jo","الأردن"],["ps","فلسطين"],["lb","لبنان"],["sy","سورية"],["eg","مصر"],
+  ["ly","ليبيا"],["tn","تونس"],["dz","الجزائر"],["ma","المغرب"],["mr","موريتانيا"],["sd","السودان"],["so","الصومال"],["dj","جيبوتي"]
+];
+const ARAB = ["sa","om","ae","qa","bh","kw","yeN","yeS"];
+const LEV = ["jo","ps","lb","sy"];
+const E = [
+  // ما قبل الفتح
+  ["عهد النبوة",622,632,ARAB],
+  ["الفرس الساسانيون",622,636,["iq"]],
+  ["الروم البيزنطيون",622,636,LEV],
+  ["الروم البيزنطيون",622,641,["eg"]],
+  ["الروم البيزنطيون",622,643,["ly"]],
+  ["الروم البيزنطيون",622,670,["tn"]],
+  ["الروم والبربر",622,705,["dz","ma"]],
+  ["قبائل صنهاجة",622,1040,["mr"]],
+  ["النوبة المسيحية (المقرة وعلوة)",622,1504,["sd"]],
+  ["قبائل متفرقة ومدن ساحلية",622,1300,["so"]],
+  ["قبائل متفرقة ومدن ساحلية",622,1415,["dj"]],
+  // الراشدون والأمويون
+  ["الخلفاء الراشدون",632,661,ARAB],
+  ["الخلفاء الراشدون",636,661,["iq",...LEV]],
+  ["الخلفاء الراشدون",641,661,["eg"]],
+  ["الخلفاء الراشدون",643,661,["ly"]],
+  ["الأمويون",661,750,["iq","sa","om","ae","qa","bh","kw","yeN","yeS",...LEV,"eg","ly"]],
+  ["الأمويون",670,683,["tn"]],
+  ["الروم والبربر",683,698,["tn"]],
+  ["الأمويون",698,750,["tn"]],
+  ["الأمويون",705,740,["dz","ma"]],
+  ["ثورات البربر",740,776,["dz"]],
+  ["ثورات البربر",740,788,["ma"]],
+  // العراق
+  ["العباسيون",750,945,["iq"]],
+  ["البويهيون",945,1055,["iq"]],
+  ["السلاجقة",1055,1194,["iq"]],
+  ["العباسيون",1194,1258,["iq"]],
+  ["المغول (الإيلخانيون)",1258,1336,["iq"]],
+  ["الجلائريون",1336,1410,["iq"]],
+  ["قره قوينلو",1410,1468,["iq"]],
+  ["آق قوينلو",1468,1508,["iq"]],
+  ["الصفويون",1508,1534,["iq"]],
+  ["العثمانيون",1534,1623,["iq"]],
+  ["الصفويون",1623,1638,["iq"]],
+  ["العثمانيون",1638,1704,["iq"]],
+  ["المماليك (الباشوات)",1704,1831,["iq"]],
+  ["العثمانيون",1831,1914,["iq"]],
+  ["الاحتلال البريطاني",1914,1921,["iq"]],
+  ["المملكة العراقية",1921,1958,["iq"],"انتداب بريطاني حتى 1932"],
+  ["الجمهورية العراقية",1958,2003,["iq"]],
+  ["الاحتلال الأمريكي",2003,2010,["iq"]],
+  // السعودية (الحجاز ونجد)
+  ["العباسيون",750,968,["sa"]],
+  ["الأشراف تحت الفاطميين",968,1171,["sa"]],
+  ["الأيوبيون والأشراف",1171,1250,["sa"],"أشراف مكة من بني قتادة منذ 1201"],
+  ["المماليك والأشراف",1250,1517,["sa"]],
+  ["العثمانيون",1517,1803,["sa"]],
+  ["الدولة السعودية الأولى",1803,1818,["sa"],"قامت في الدرعية سنة 1744 وضمّت الحجاز 1803"],
+  ["حكم محمد علي",1818,1840,["sa"]],
+  ["العثمانيون",1840,1916,["sa"]],
+  ["مملكة الحجاز الهاشمية",1916,1925,["sa"]],
+  ["مملكة الحجاز ونجد",1925,1932,["sa"]],
+  ["المملكة العربية السعودية",1932,2010,["sa"]],
+  // عمان
+  ["الأئمة الإباضيون",750,1154,["om"]],
+  ["النباهنة",1154,1507,["om"]],
+  ["البرتغال",1507,1624,["om"]],
+  ["اليعاربة",1624,1737,["om"]],
+  ["الفرس",1737,1744,["om"]],
+  ["البوسعيد",1744,1970,["om"]],
+  ["سلطنة عُمان",1970,2010,["om"]],
+  // الإمارات
+  ["العباسيون",750,1259,["ae"]],
+  ["قبائل مستقلة",1259,1507,["ae"]],
+  ["البرتغال",1507,1633,["ae"]],
+  ["اليعاربة والقبائل",1633,1760,["ae"]],
+  ["القواسم وبنو ياس",1760,1820,["ae"]],
+  ["الحماية البريطانية",1820,1971,["ae"],"الإمارات المتصالحة"],
+  ["دولة الإمارات العربية المتحدة",1971,2010,["ae"]],
+  // شرق الجزيرة: قطر والبحرين والكويت
+  ["العباسيون",750,899,["qa","bh","kw"]],
+  ["القرامطة",899,1077,["qa","bh","kw"]],
+  ["العيونيون",1077,1253,["qa","bh","kw"]],
+  ["قبائل مستقلة",1253,1521,["qa","bh","kw"]],
+  ["البرتغال",1521,1602,["qa","bh"]],
+  ["نفوذ عُماني وفارسي",1602,1783,["qa"]],
+  ["الصفويون",1602,1717,["bh"]],
+  ["نفوذ عُماني وفارسي",1717,1783,["bh"]],
+  ["آل خليفة",1783,1820,["bh"]],
+  ["الحماية البريطانية",1820,1971,["bh"],"تحت حكم آل خليفة"],
+  ["دولة البحرين",1971,2002,["bh"]],
+  ["مملكة البحرين",2002,2010,["bh"]],
+  ["نفوذ آل خليفة",1783,1868,["qa"]],
+  ["آل ثاني",1868,1871,["qa"]],
+  ["العثمانيون",1871,1915,["qa"]],
+  ["الحماية البريطانية",1915,1971,["qa"]],
+  ["دولة قطر",1971,2010,["qa"]],
+  ["البرتغاليون والعثمانيون والهولنديون",1521,1669,["kw"]],
+  ["بنو خالد",1669,1756,["kw"]],
+  ["آل صباح",1756,1899,["kw"]],
+  ["الحماية البريطانية",1899,1961,["kw"]],
+  ["دولة الكويت",1961,1990,["kw"]],
+  ["الغزو العراقي",1990,1991,["kw"]],
+  ["دولة الكويت",1991,2010,["kw"]],
+  // اليمن
+  ["العباسيون",750,819,["yeN","yeS"]],
+  ["الزياديون",819,1018,["yeS"]],
+  ["العباسيون",819,847,["yeN"]],
+  ["اليعفريون",847,897,["yeN"]],
+  ["الأئمة الزيديون واليعفريون",897,1047,["yeN"]],
+  ["النجاحيون",1018,1047,["yeS"]],
+  ["الصليحيون",1047,1138,["yeN","yeS"]],
+  ["الزيديون والحاتميون",1138,1173,["yeN"]],
+  ["الزريعيون وبنو مهدي",1138,1173,["yeS"]],
+  ["الأيوبيون",1173,1229,["yeN","yeS"]],
+  ["بنو رسول",1229,1454,["yeN","yeS"]],
+  ["بنو طاهر",1454,1517,["yeN","yeS"]],
+  ["المماليك",1517,1538,["yeN","yeS"]],
+  ["العثمانيون",1538,1635,["yeN","yeS"]],
+  ["الأئمة القاسميون",1635,1849,["yeN"]],
+  ["الأئمة القاسميون",1635,1728,["yeS"]],
+  ["سلطنات الجنوب",1728,1839,["yeS"],"لحج وغيرها"],
+  ["الوجود البريطاني",1839,1967,["yeS"],"عدن والمحميات"],
+  ["العثمانيون",1849,1918,["yeN"]],
+  ["المملكة المتوكلية اليمنية",1918,1962,["yeN"]],
+  ["الجمهورية العربية اليمنية",1962,1990,["yeN"]],
+  ["جمهورية اليمن الديمقراطية الشعبية",1967,1990,["yeS"]],
+  ["الجمهورية اليمنية",1990,2010,["yeN","yeS"]],
+  // بلاد الشام ومصر
+  ["العباسيون",750,868,[...LEV,"eg"]],
+  ["الطولونيون",868,905,[...LEV,"eg"]],
+  ["العباسيون",905,935,[...LEV,"eg"]],
+  ["الإخشيديون",935,969,[...LEV,"eg"]],
+  ["الفاطميون",969,1071,["jo","ps","lb"]],
+  ["الفاطميون",969,1076,["sy"]],
+  ["الفاطميون",969,1171,["eg"]],
+  ["السلاجقة",1071,1115,["jo"]],
+  ["السلاجقة",1071,1099,["ps"]],
+  ["السلاجقة",1071,1109,["lb"]],
+  ["السلاجقة",1076,1128,["sy"]],
+  ["الصليبيون",1115,1187,["jo"]],
+  ["الصليبيون",1099,1187,["ps"],"بقيت مدن الساحل بأيديهم حتى 1291"],
+  ["الصليبيون",1109,1289,["lb"],"كونتية طرابلس"],
+  ["الزنكيون",1128,1174,["sy"]],
+  ["الأيوبيون",1187,1260,["jo","ps"]],
+  ["الأيوبيون",1174,1260,["sy"]],
+  ["الأيوبيون",1171,1250,["eg"]],
+  ["المماليك",1260,1516,["jo","ps"]],
+  ["المماليك",1289,1516,["lb"]],
+  ["المماليك",1260,1516,["sy"]],
+  ["المماليك",1250,1517,["eg"]],
+  ["العثمانيون",1516,1831,["jo"]],
+  ["العثمانيون",1516,1740,["ps"]],
+  ["ظاهر العمر",1740,1775,["ps"]],
+  ["العثمانيون",1775,1831,["ps"]],
+  ["العثمانيون",1516,1590,["lb"]],
+  ["المعنيون",1590,1697,["lb"],"تحت السيادة العثمانية"],
+  ["الشهابيون",1697,1842,["lb"],"تحت السيادة العثمانية"],
+  ["العثمانيون",1516,1831,["sy"]],
+  ["حكم محمد علي",1831,1840,["jo","ps"]],
+  ["حكم محمد علي",1831,1840,["sy"]],
+  ["العثمانيون",1840,1918,["jo"]],
+  ["العثمانيون",1840,1917,["ps"]],
+  ["العثمانيون",1840,1918,["sy"]],
+  ["القائمقاميتان",1842,1861,["lb"]],
+  ["متصرفية جبل لبنان",1861,1915,["lb"]],
+  ["العثمانيون",1915,1918,["lb"]],
+  ["المملكة العربية السورية",1918,1920,["jo"]],
+  ["المملكة العربية السورية",1918,1920,["sy"]],
+  ["إمارة شرق الأردن",1920,1946,["jo"],"تحت الانتداب البريطاني"],
+  ["المملكة الأردنية الهاشمية",1946,2010,["jo"]],
+  ["الانتداب البريطاني",1917,1948,["ps"]],
+  ["الضفة للأردن وغزة لمصر",1948,1967,["ps"]],
+  ["الاحتلال الإسرائيلي",1967,2010,["ps"],"قيام السلطة الفلسطينية 1994"],
+  ["الانتداب الفرنسي",1918,1943,["lb"]],
+  ["الجمهورية اللبنانية",1943,2010,["lb"]],
+  ["الانتداب الفرنسي",1920,1946,["sy"]],
+  ["الجمهورية السورية",1946,1958,["sy"]],
+  ["الجمهورية العربية المتحدة",1958,1961,["sy"]],
+  ["الجمهورية العربية السورية",1961,2010,["sy"]],
+  ["العثمانيون",1517,1798,["eg"]],
+  ["الحملة الفرنسية",1798,1801,["eg"]],
+  ["العثمانيون",1801,1805,["eg"]],
+  ["أسرة محمد علي",1805,1882,["eg"]],
+  ["الاحتلال البريطاني",1882,1922,["eg"],"الحماية البريطانية منذ 1914"],
+  ["المملكة المصرية",1922,1953,["eg"]],
+  ["جمهورية مصر",1953,1958,["eg"]],
+  ["الجمهورية العربية المتحدة",1958,1971,["eg"]],
+  ["جمهورية مصر العربية",1971,2010,["eg"]],
+  // ليبيا وتونس
+  ["العباسيون",750,800,["ly","tn"]],
+  ["الأغالبة",800,909,["ly","tn"]],
+  ["الفاطميون",909,972,["ly","tn"]],
+  ["الزيريون",972,1146,["ly"]],
+  ["النورمان",1146,1158,["ly"]],
+  ["الموحدون",1158,1229,["ly"]],
+  ["الحفصيون",1229,1510,["ly"]],
+  ["الإسبان وفرسان القديس يوحنا",1510,1551,["ly"]],
+  ["العثمانيون",1551,1711,["ly"]],
+  ["الأسرة القرمانلية",1711,1835,["ly"]],
+  ["العثمانيون",1835,1911,["ly"]],
+  ["الاحتلال الإيطالي",1911,1943,["ly"]],
+  ["إدارة بريطانية وفرنسية",1943,1951,["ly"]],
+  ["المملكة الليبية",1951,1969,["ly"]],
+  ["الجمهورية العربية الليبية",1969,1977,["ly"]],
+  ["الجماهيرية الليبية",1977,2010,["ly"]],
+  ["الزيريون",972,1159,["tn"]],
+  ["الموحدون",1159,1229,["tn"]],
+  ["الحفصيون",1229,1574,["tn"]],
+  ["العثمانيون (الدايات والمراديون)",1574,1705,["tn"]],
+  ["الحسينيون (البايات)",1705,1881,["tn"]],
+  ["الحماية الفرنسية",1881,1956,["tn"]],
+  ["المملكة التونسية",1956,1957,["tn"]],
+  ["الجمهورية التونسية",1957,2010,["tn"]],
+  // الجزائر
+  ["الرستميون",776,909,["dz"]],
+  ["الفاطميون",909,972,["dz"]],
+  ["الزيريون",972,1014,["dz"]],
+  ["بنو حماد",1014,1152,["dz"]],
+  ["الموحدون",1152,1235,["dz"]],
+  ["بنو زيان",1235,1554,["dz"]],
+  ["العثمانيون (الدايات)",1554,1830,["dz"]],
+  ["الاحتلال الفرنسي",1830,1962,["dz"]],
+  ["الجمهورية الجزائرية",1962,2010,["dz"]],
+  // المغرب
+  ["الأدارسة",788,974,["ma"]],
+  ["زناتة (مغراوة وبنو يفرن)",974,1061,["ma"]],
+  ["المرابطون",1061,1147,["ma"]],
+  ["الموحدون",1147,1269,["ma"]],
+  ["بنو مرين",1269,1465,["ma"]],
+  ["بنو وطاس",1465,1549,["ma"]],
+  ["السعديون",1549,1659,["ma"]],
+  ["العلويون",1659,1912,["ma"]],
+  ["الحمايتان الفرنسية والإسبانية",1912,1956,["ma"]],
+  ["المملكة المغربية",1956,2010,["ma"]],
+  // موريتانيا
+  ["المرابطون",1040,1147,["mr"]],
+  ["قبائل صنهاجة وبنو حسان",1147,1650,["mr"]],
+  ["الإمارات (الترارزة والبراكنة وآدرار)",1650,1904,["mr"]],
+  ["الاحتلال الفرنسي",1904,1960,["mr"]],
+  ["الجمهورية الإسلامية الموريتانية",1960,2010,["mr"]],
+  // السودان والصومال وجيبوتي
+  ["سلطنة الفونج",1504,1821,["sd"]],
+  ["الحكم التركي المصري",1821,1885,["sd"]],
+  ["الدولة المهدية",1885,1898,["sd"]],
+  ["الحكم الثنائي",1898,1956,["sd"],"البريطاني المصري"],
+  ["جمهورية السودان",1956,2010,["sd"]],
+  ["سلطنات إسلامية (عدل وأجوران)",1300,1700,["so"]],
+  ["سلطنات وقبائل محلية",1700,1884,["so"]],
+  ["الاحتلال البريطاني والإيطالي",1884,1960,["so"]],
+  ["جمهورية الصومال",1960,2010,["so"],"انهيار الحكومة المركزية 1991"],
+  ["سلطنة عدل",1415,1577,["dj"]],
+  ["سلطنات عفرية وقبائل",1577,1862,["dj"]],
+  ["الاحتلال الفرنسي",1862,1977,["dj"]],
+  ["جمهورية جيبوتي",1977,2010,["dj"]],
+];
+
+
+
+const COL_W = 62, AX = 54, HEAD = 46, PADB = 46;
+const NAMES = Object.fromEntries(COUNTRIES);
+const idx = Object.fromEntries(COUNTRIES.map(([k],i)=>[k,i]));
+const W = AX*2 + COL_W*COUNTRIES.length;
+
+const FIXED = {
+ "عهد النبوة":"#5f8f6b","الخلفاء الراشدون":"#9e9e9e","الأمويون":"#c79bd9","العباسيون":"#f1dfb0",
+ "الفاطميون":"#7fbf93","العثمانيون":"#e4c6ef","المماليك":"#e9cf7d","الأيوبيون":"#f6e04b","الصليبيون":"#d8453c",
+ "السلاجقة":"#f4dc8c","البويهيون":"#c4b59b","الطولونيون":"#3d7a46","الإخشيديون":"#e6c83c","الزنكيون":"#bfe3f2",
+ "الروم البيزنطيون":"#a9d8ef","الروم والبربر":"#a9d8ef","الفرس الساسانيون":"#d6c3a1","الفرس":"#c9a86b",
+ "البرتغال":"#d9533b","المرابطون":"#ee7d3a","الموحدون":"#fbf3cf","الأغالبة":"#3e60b7","الأدارسة":"#4a3227",
+ "الرستميون":"#9bc560","الزيريون":"#5d8a67","بنو حماد":"#5a4636","بنو مرين":"#f2e04f","بنو وطاس":"#2f6b4b",
+ "السعديون":"#8f4a3a","العلويون":"#8c2f4e","بنو زيان":"#c8b9a6","الحفصيون":"#bdae9a","القرامطة":"#7c3b62",
+ "العيونيون":"#c78b52","قبائل مستقلة":"#a9d466","النباهنة":"#f08a3c","اليعاربة":"#97a547","البوسعيد":"#f6efc8",
+ "بنو رسول":"#e9dcb6","بنو طاهر":"#9fd6ef","الصليحيون":"#e0553e","الزياديون":"#f2a63a","اليعفريون":"#f2b84a",
+ "الأئمة القاسميون":"#8d8a4d","المغول (الإيلخانيون)":"#5b86d8","الصفويون":"#f0d34e","المعنيون":"#e7cf47",
+ "الشهابيون":"#c9e07a","حكم محمد علي":"#f19f6a","أسرة محمد علي":"#f19f6a","الحكم التركي المصري":"#f19f6a",
+ "الأشراف تحت الفاطميين":"#b9d39a","الأيوبيون والأشراف":"#f6e88b","المماليك والأشراف":"#efdca0",
+ "الاحتلال الإسرائيلي":"#7d7d7d","الغزو العراقي":"#444",
+};
+function hashColor(s){let h=0;for(const c of s)h=(h*31+c.codePointAt(0))>>>0;const hue=h%360;return `hsl(${hue} ${48+(h>>9)%22}% ${58+(h>>4)%16}%)`;}
+function colorOf(n){
+  if(FIXED[n]) return FIXED[n];
+  if(/بريطاني|البريطانية|الإنجليز/.test(n)) return "#f5a35c";
+  if(/الفرنسي|الفرنسية|فرنسية/.test(n)) return "#f4efd0";
+  if(/الإيطالي/.test(n)) return "#9ccf8f";
+  if(/الأمريكي/.test(n)) return "#c9c9c9";
+  if(/العثمانيون/.test(n)) return "#e4c6ef";
+  return hashColor(n);
+}
+function lum(c){const d=document.createElement("div");d.style.color=c;document.body.appendChild(d);
+  const m=getComputedStyle(d).color.match(/\d+/g).map(Number);d.remove();
+  return (0.299*m[0]+0.587*m[1]+0.114*m[2])/255;}
+const LUM={};
+const hijri = g => Math.max(1, Math.round((g-622)*1.0307));
+
+let mode="var";
+const SEGS = {var:[[622,1500,0.62],[1500,1800,1.15],[1800,2010,3.3]], lin:[[622,2010,1.12]]};
+function scale(){ const s=SEGS[mode]; const H=s.reduce((a,[f,t,k])=>a+(t-f)*k,0);
+  return {H, y:g=>{ // top = 2010
+    let off=0; for(let i=s.length-1;i>=0;i--){const [f,t,k]=s[i]; if(g>=f){return HEAD+off+(t-Math.min(g,t))*k;} off+=(t-f)*k;} return HEAD+H; }};
+}
+
+// build blocks: split cols into runs of adjacent indices
+const blocks=[];
+E.forEach(([name,from,to,cols,note])=>{
+  const ix=cols.map(c=>idx[c]).sort((a,b)=>a-b); let run=[ix[0]];
+  const push=()=>blocks.push({name,from,to,note,i0:run[0],i1:run[run.length-1],cols:run.map(i=>COUNTRIES[i][0])});
+  for(let j=1;j<ix.length;j++){ if(ix[j]===run[run.length-1]+1) run.push(ix[j]); else {push();run=[ix[j]];} } push();
+});
+const xOf = i => W - AX - (i+1)*COL_W; // RTL: first country on the right
+
+const svg=document.getElementById("chart"), NS="http://www.w3.org/2000/svg";
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+let selected=null;
+
+function draw(){
+  const {H,y}=scale(); const total=HEAD+H+PADB;
+  svg.innerHTML=""; svg.setAttribute("viewBox",`0 0 ${W} ${total}`); svg.setAttribute("width",W); svg.setAttribute("height",total);
+  svg.style.width = "min(100%, "+W*1.15+"px)"; svg.style.minWidth="1100px"; svg.style.height="auto";
+  const gB=el("g",{id:"blocks"});
+  // year grid
+  const axis=el("g",{class:"axis",direction:"ltr"});
+  const ticks=[]; for(let g=700;g<=1500;g+=100)ticks.push(g); for(let g=1550;g<=1800;g+=50)ticks.push(g);
+  for(let g=1820;g<=2000;g+=20)ticks.push(g); ticks.push(622,2010);
+  ticks.forEach(g=>{const yy=y(g);
+    el("line",{x1:AX,x2:W-AX,y1:yy,y2:yy,stroke:"#000","stroke-opacity":.06},axis);
+    const tg=el("text",{x:AX-6,y:yy+3.5,"text-anchor":"end"},axis); tg.textContent=g;
+    const th=el("text",{x:W-AX+6,y:yy+3.5,"text-anchor":"start"},axis); th.textContent=hijri(g);
+  });
+  const t1=el("text",{x:AX-6,y:HEAD-8,"text-anchor":"end","font-weight":700},axis); t1.textContent="ميلادي";
+  const t2=el("text",{x:W-AX+6,y:HEAD-8,"text-anchor":"start","font-weight":700},axis); t2.textContent="هجري";
+
+  blocks.forEach(b=>{
+    const x=xOf(b.i1), w=(b.i1-b.i0+1)*COL_W, y0=y(b.to), h=y(b.from)-y0;
+    const fill=colorOf(b.name); if(LUM[fill]===undefined) LUM[fill]=lum(fill);
+    const dark=LUM[fill]<0.55, tc=dark?"#fff":"#2b211c";
+    b.cols.forEach(cc=>{
+      const a=el("a",{href:`p/${cc}-${b.from}.html`},gB);
+      const r=el("rect",{x:xOf(idx[cc]),y:y0,width:COL_W,height:h,fill,class:"cell"},a); r._b=b;
+      const tt=el("title",{},r); tt.textContent=`${b.name} — ${NAMES[cc]}`;
+      r.addEventListener("mousemove",ev=>tip(ev,b,cc)); r.addEventListener("mouseleave",()=>tipEl.style.display="none");
+    });
+    el("rect",{x,y:y0,width:w,height:h,fill:"none",stroke:"#fff","stroke-width":.8,"pointer-events":"none"},gB);
+    // label fitting
+    const len=b.name.length; let fs=Math.min(w>150?22:13, h*0.62, (w-6)/(len*0.52));
+    let lab=null;
+    if(fs>=7.5){ lab=el("text",{x:x+w/2,y:y0+h/2,"text-anchor":"middle","dominant-baseline":"central","font-size":fs.toFixed(1),fill:tc,class:"lbl"},gB); }
+    else { const fv=Math.min(13,(w-4)*0.62,(h-6)/(len*0.52));
+      if(fv>=7.5 && h>w){ lab=el("text",{x:0,y:0,transform:`translate(${x+w/2},${y0+h/2}) rotate(-90)`,"text-anchor":"middle","dominant-baseline":"central","font-size":fv.toFixed(1),fill:tc,class:"lbl"},gB);} }
+    if(lab){lab.textContent=b.name; lab._n=b.name;}
+    if(h>=24 && w>=30 && b.from>622){ const t=el("text",{x:x+w-4,y:y0+h-4,"text-anchor":"start",fill:tc,class:"yr lbl"},gB); t.textContent=b.from; t._n=b.name; }
+  });
+  // headers top & bottom
+  [[HEAD-40,"top"],[HEAD+H+6,"bot"]].forEach(([yy])=>{
+    const g=el("g",{class:"head"});
+    COUNTRIES.forEach(([k,n],i)=>{ el("rect",{x:xOf(i)+1,y:yy,width:COL_W-2,height:34,rx:3,fill:"#5a4a42"},g);
+      const short=n.replace("اليمن (الشمال)","اليمن ش").replace("اليمن (الجنوب)","اليمن ج");
+      const t=el("text",{x:xOf(i)+COL_W/2,y:yy+17,"text-anchor":"middle","dominant-baseline":"central","font-size":short.length>7?11:13},g); t.textContent=short; });
+  });
+  applySel();
+}
+
+const tipEl=document.getElementById("tip");
+function tip(ev,b,cc){
+  tipEl.innerHTML=`<b>${b.name}</b> — ${NAMES[cc]}<br>${b.from}–${b.to} م &nbsp;·&nbsp; ${hijri(b.from)}–${hijri(b.to)} هـ${b.note?`<br><span class="s">${b.note}</span>`:""}<br><span class="s">اضغط لقراءة المزيد عن هذه الحقبة</span>`;
+  tipEl.style.display="block";
+  const tx=Math.min(ev.clientX+14, innerWidth-tipEl.offsetWidth-8), ty=Math.min(ev.clientY+14, innerHeight-tipEl.offsetHeight-8);
+  tipEl.style.left=tx+"px"; tipEl.style.top=ty+"px";
+}
+function select(n){ selected=n; applySel(); }
+function applySel(){
+  const q=document.getElementById("q").value.trim();
+  const match = n => selected ? n===selected : (q && n.includes(q));
+  const active = !!(selected || q);
+  svg.classList.toggle("dim",active);
+  svg.querySelectorAll(".cell").forEach(r=>r.classList.toggle("hl",active&&match(r._b.name)));
+  svg.querySelectorAll(".lbl").forEach(t=>t.classList.toggle("hl",active&&match(t._n)));
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.n===selected));
+}
+
+// legend chips, ordered by first appearance
+const first={}; E.forEach(([n,f])=>{ if(!(n in first)||f<first[n]) first[n]=f; });
+const chips=document.getElementById("chips");
+Object.keys(first).sort((a,b)=>first[a]-first[b]).forEach(n=>{
+  const c=document.createElement("span"); c.className="chip"; c.dataset.n=n;
+  c.innerHTML=`<i style="background:${colorOf(n)}"></i>${n}`;
+  c.onclick=()=>{ select(selected===n?null:n); document.querySelector(".wrap").scrollIntoView({behavior:"smooth"}); };
+  chips.appendChild(c);
+});
+document.getElementById("q").addEventListener("input",()=>{selected=null;applySel();});
+document.getElementById("clr").onclick=()=>{selected=null;document.getElementById("q").value="";applySel();};
+document.querySelectorAll("#scale button").forEach(b=>b.onclick=()=>{
+  mode=b.dataset.s; document.querySelectorAll("#scale button").forEach(x=>x.classList.toggle("on",x===b)); draw(); });
+draw();
+(document.fonts&&document.fonts.ready||Promise.resolve()).then(draw);
+</script>
+</body>
+</html>
