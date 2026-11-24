@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تاريخ الوطن العربي خلال 14 قرناً | مجلة العربي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090d16;
+            --surface: #131c2e;
+            --surface-hover: #1e293b;
+            --border: #22324d;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gold: #d4af37;
+            --gold-light: #fef08a;
+            --accent: #38bdf8;
+            --c-gulf: #059669;
+            --c-sham: #d97706;
+            --c-egypt: #0284c7;
+            --c-maghreb: #7c3aed;
+            --c-andalus: #e11d48;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            border-radius: 24px;
+            padding: 36px 28px;
+            text-align: center;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.6);
+            margin-bottom: 28px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2.8rem;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 840px;
+            margin: 0 auto 20px auto;
+            line-height: 1.8;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 18px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--gold);
+        }
+
+        .view-tabs {
+            display: flex;
+            background: var(--surface);
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            gap: 6px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--gold);
+            color: #000;
+            font-weight: 800;
+        }
+
+        /* Centuries Bar */
+        .centuries-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+            scrollbar-width: thin;
+        }
+
+        .century-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .century-pill:hover {
+            border-color: var(--gold);
+            color: white;
+        }
+
+        .century-pill.active {
+            background: linear-gradient(135deg, #d4af37 0%, #b45309 100%);
+            color: #000;
+            border-color: var(--gold);
+            font-weight: 800;
+        }
+
+        /* Cards Grid */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .century-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .century-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--gold);
+        }
+
+        .card-header {
+            background: rgba(0,0,0,0.3);
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .century-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--gold-light);
+            font-family: 'Amiri', serif;
+        }
+
+        .century-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.06);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .card-body {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .region-item {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 10px;
+            padding: 10px 12px;
+            border-right: 4px solid var(--accent);
+        }
+
+        .region-item.gulf { border-color: var(--c-gulf); }
+        .region-item.sham { border-color: var(--c-sham); }
+        .region-item.egypt { border-color: var(--c-egypt); }
+        .region-item.maghreb { border-color: var(--c-maghreb); }
+        .region-item.andalus { border-color: var(--c-andalus); }
+
+        .region-title {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .dynasties-list {
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* Matrix View */
+        .matrix-container {
+            overflow-x: auto;
+            background: var(--surface);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            padding: 16px;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        table.matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 1100px;
+        }
+
+        table.matrix-table th, table.matrix-table td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: right;
+        }
+
+        table.matrix-table th {
+            background: #090d16;
+            color: var(--gold-light);
+            font-weight: 800;
+            position: sticky;
+            top: 0;
+        }
+
+        /* Poster Viewer */
+        .poster-viewer {
+            display: none;
+            background: var(--surface);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .poster-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        footer strong {
+            color: var(--gold-light);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="hero">
+        <div class="hero-badge">هدية مجلة العربي • الكويت • يناير 2010م / محرم 1431هـ</div>
+        <h1>تاريخ الوطن العربي خلال ١٤ قرناً</h1>
+        <p>مخطط زمني توثيقي شامل يعرض تعاقب الدول والسلالات الحاكمة والخلافات الإسلامية عبر أقاليم الوطن العربي منذ مطلع القرن الأول الهجري وحتى العصر الحديث.</p>
+        <div class="hero-meta">
+            <span>📅 <strong>الامتداد الزمني:</strong> 1 هـ (622م) – 1431 هـ (2010م)</span>
+            <span>🗺️ <strong>نطاق التغطية:</strong> الخليج والجزيرة • مصر والسودان • بلاد الشام والعراق • المغرب العربي • الأندلس</span>
+            <span>👑 <strong>السلالات الموثقة:</strong> أكثر من 45 دولة وسلالة حاكمة</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن دولة، قرن، إقليم، أو عاصمة (مثال: الأيوبيون، الأندلس، بنو رسول، القرن 7)..." oninput="filterData()">
+        </div>
+        <div class="view-tabs">
+            <button class="tab-btn active" onclick="switchView('cards')">📑 بطاقات القرون</button>
+            <button class="tab-btn" onclick="switchView('matrix')">📊 المصفوفة الجغرافية</button>
+            <button class="tab-btn" onclick="switchView('poster')">🖼️ الوثيقة الأصلية (البوستر)</button>
+        </div>
+    </div>
+
+    <div class="centuries-bar">
+        <button class="century-pill active" onclick="selectCentury('all')">جميع القرون (1 - 14)</button>
+        <button class="century-pill" onclick="selectCentury(1)">القرن 1 هـ</button>
+        <button class="century-pill" onclick="selectCentury(2)">القرن 2 هـ</button>
+        <button class="century-pill" onclick="selectCentury(3)">القرن 3 هـ</button>
+        <button class="century-pill" onclick="selectCentury(4)">القرن 4 هـ</button>
+        <button class="century-pill" onclick="selectCentury(5)">القرن 5 هـ</button>
+        <button class="century-pill" onclick="selectCentury(6)">القرن 6 هـ</button>
+        <button class="century-pill" onclick="selectCentury(7)">القرن 7 هـ</button>
+        <button class="century-pill" onclick="selectCentury(8)">القرن 8 هـ</button>
+        <button class="century-pill" onclick="selectCentury(9)">القرن 9 هـ</button>
+        <button class="century-pill" onclick="selectCentury(10)">القرن 10 هـ</button>
+        <button class="century-pill" onclick="selectCentury(11)">القرن 11 هـ</button>
+        <button class="century-pill" onclick="selectCentury(12)">القرن 12 هـ</button>
+        <button class="century-pill" onclick="selectCentury(13)">القرن 13 هـ</button>
+        <button class="century-pill" onclick="selectCentury(14)">القرن 14 هـ</button>
+    </div>
+
+    <div id="cardsView" class="timeline-grid"></div>
+
+    <div id="matrixView" class="matrix-container">
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th style="width: 120px;">القرن الهجري</th>
+                    <th>الجزيرة العربية والخليج واليمن</th>
+                    <th>الهلال الخصيب (العراق والشام)</th>
+                    <th>مصر والسودان</th>
+                    <th>المغرب العربي</th>
+                    <th>الأندلس</th>
+                </tr>
+            </thead>
+            <tbody id="matrixBody"></tbody>
+        </table>
+    </div>
+
+    <div id="posterView" class="poster-viewer">
+        <h3 style="color: var(--gold-light); margin-bottom: 12px;">الوثيقة التاريخية الأصلية لمجلة «العربي»</h3>
+        <p style="color: var(--text-muted); margin-bottom: 18px;">المخطط البانورامي التوثيقي كاملاً كما نشر في عدد يناير 2010.</p>
+        <a href="poster.jpg" target="_blank" title="انقر لفتح الصورة بدقة كاملة">
+            <img src="poster.jpg" alt="بوستر تاريخ الوطن العربي خلال 14 قرناً" class="poster-img">
+        </a>
+    </div>
+
+    <footer>
+        <p>تم إعداد وتنسيق هذا المخطط الرقمي التفاعلي بالكامل استناداً إلى بوستر <strong>مجلة العربي الكويتية</strong> (يناير 2010 / محرم 1431هـ).</p>
+        <p>إهداء خاص للمهندس <strong>يوسف</strong> و <strong>أبو عبد العزيز</strong> 🌟</p>
+    </footer>
+
+</div>
+
+<script>
+const centuriesData = [
+    {
+        century: 1,
+        title: "القرن الأول الهجري",
+        gregorian: "622م – 719م",
+        gulf: "عصر النبوة والخلافة الراشدة بالمدينة المنورة • انطلاق الفتوحات الإسلامية الكبرى • تبعية الدولة الأموية وعاصمتها دمشق",
+        sham: "فتوح الشام والعراق • تأسيس البصرة والكوفة • دمشق عاصمة الخلافة الأموية الكبرى (معاوية وبنو أمية)",
+        egypt: "فتح مصر بقيادة عمرو بن العاص (20هـ) • تأسيس الفسطاط وجامع عمرو • تبعية الولاية الأموية لمصر والنوبة",
+        maghreb: "فتوح الشمال الإفريقي • تأسيس مدينة القيروان على يد عقبة بن نافع (50هـ) • استكمال فتح برقة وطرابلس والمغرب",
+        andalus: "فتح الأندلس بقيادة طارق بن زياد وموسى بن نصير (92هـ) • بدء عهد الولاة التابعين للخلافة الأموية"
+    },
+    {
+        century: 2,
+        title: "القرن الثاني الهجري",
+        gregorian: "719م – 816م",
+        gulf: "سقوط الدولة الأموية وقيام الخلافة العباسية • ظهور أئمة الإباضية في عمان (الإمامة الأولى والثانية)",
+        sham: "انتقال الثقل وبناء بغداد عاصمة الخلافة (145هـ) على يد المنصور • العصر العباسي الذهبي (المهدي، هارون الرشيد)",
+        egypt: "ولاية عباسية مباشرة • انتفاضات القبائل في الحوف • استقرار مدن الثغور الإسكندرية ودمياط والفرما",
+        maghreb: "ثورة البربر الكبرى • قيام دولة الأدارسة بالمغرب الأقصى (172هـ) • قيام دولة الأغالبة في إفريقية/تونس (184هـ)",
+        andalus: "نجاة صقر قريش عبد الرحمن الداخل وتأسيس إمارة قرطبة الأموية المستقلة (138هـ) • توطيد الحكم وبناء جامع قرطبة"
+    },
+    {
+        century: 3,
+        title: "القرن الثالث الهجري",
+        gregorian: "816م – 913م",
+        gulf: "ظهور الدولة الزيادية في زبيد باليمن • الدولة اليعفرية في صنعاء • استمرار إمامة عمان وحروب العباسيين معها",
+        sham: "أزمة سامراء وثورة الزنج في جنوب العراق • نشأة الحركة الإسماعيلية والقرامطة في البحرين والكوفة",
+        egypt: "استقلال أحمد بن طولون وتأسيس الدولة الطولونية (254هـ) بمصر والشام • بناء مدينة القطائع وجامع ابن طولون",
+        maghreb: "ازدهار دولة الأغالبة وفتح صقلية (212هـ) • ازدهار دولة الأدارسة وبناء جامع القرويين في فاس (245هـ)",
+        andalus: "عهد الإمارة الأموية: الأمير محمد بن عبد الرحمن، المنذر، وعبد الله • ثورات داخلية وتمرد عمر بن حفصون"
+    },
+    {
+        century: 4,
+        title: "القرن الرابع الهجري",
+        gregorian: "913م – 1009م",
+        gulf: "دولة القرامطة في الإحساء والخليج وانتزاع الحجر الأسود (317هـ) • الصليحيون وأشراف مكة • البويهيون في بغداد",
+        sham: "الدولة الحمدانية في الموصل وحلب (سيف الدولة) والجهاد ضد الروم • سيطرة البويهيين الديالمة على بغداد",
+        egypt: "الدولة الإخشيدية (محمد بن طغج) • الفتح الفاطمي لمصر (358هـ) وتأسيس القاهرة وبناء الأزهر الشريف",
+        maghreb: "قيام الخلافة الفاطمية في المهدية • انتقال الفاطميين للقاهرة وترك المغرب لـ بني زيري (صنهاجة) وبني حماد",
+        andalus: "إعلان عبد الرحمن الناصر الخلافة الأموية بقرطبة (316هـ) • العصر الذهبي وحكم الحكم المستنصر والحاجب المنصور"
+    },
+    {
+        century: 5,
+        title: "القرن الخامس الهجري",
+        gregorian: "1009م – 1106م",
+        gulf: "الدولة الصليحية في اليمن (الملكة الحرة أروى بنت أحمد) • انحسار القرامطة وزوالهم • بنو مكرم وسلاطين عمان",
+        sham: "دخول السلاجقة بغداد (طغرل بك 447هـ) • السلاجقة بدمشق وحلب • الحملة الصليبية الأولى وسقوط القدس (492هـ)",
+        egypt: "الخلافة الفاطمية: الحاكم بأمر الله، المستنصر بالله • الشدة المستنصرية • قدوم بدر الجمالي وإعادة الاستقرار",
+        maghreb: "زحف قبائل بني هلال وسليم (التغريبة الهلالية) • قيام دولة المرابطين اللمتونيين بقيادة يوسف بن تاشفين",
+        andalus: "سقوط الخلافة الأموية وتمزق الأندلس لملوك الطوائف (422هـ) • معركة الزلاقة (479هـ) وتوحيد الأندلس تحت المرابطين"
+    },
+    {
+        century: 6,
+        title: "القرن السادس الهجري",
+        gregorian: "1106م – 1203م",
+        gulf: "دولة بني مهدي وبنو زريع في اليمن • صعود الأشراف في الحجاز (بنو قتادة في مكة) • نفوذ الأيوبيين في اليمن",
+        sham: "عصر الجهاد ضد الصليبيين: عماد الدين زنكي، نور الدين محمود • معركة حطين (583هـ) واسترداد القدس الشريف",
+        egypt: "نهاية الدولة الفاطمية (567هـ) على يد صلاح الدين الأيوبي • تأسيس الدولة الأيوبية وبناء قلعة الجبل",
+        maghreb: "سقوط المرابطين وقيام دولة الموحدين العظمى (عبد المؤمن بن علي) • توحيد كامل بلاد المغرب تحت راية واحدة",
+        andalus: "انضواء الأندلس تحت سلطان الموحدين • معركة الأرك الخالدة (591هـ) بقيادة المنصور الموحدي وانتصار المسلمين"
+    },
+    {
+        century: 7,
+        title: "القرن السابع الهجري",
+        gregorian: "1203م – 1301م",
+        gulf: "قيام دولة بني رسول العظيمة في اليمن (626هـ - 858هـ) • استقرار إمارة مكة للأشراف القتاديين • نفوذ هرمز بالخليج",
+        sham: "الغزو المغولي وسقوط بغداد ومقتل الخليفة العباسي (656هـ/1258م) • معركة عين جالوت (658هـ) وتحرير دمشق والشام",
+        egypt: "نهاية الأيوبيين وقيام دولة المماليك البحرية (شجر الدر، قطز، بيبرس، قلاوون) • إحياء الخلافة العباسية بالقاهرة",
+        maghreb: "تفكك دولة الموحدين بعد معركة العقاب (609هـ) • انقسام المغرب: الحفصيون (تونس)، بنو زيان (تلمسان)، بنو مرين (فاس)",
+        andalus: "سقوط حواضر الأندلس الكبرى (قرطبة 633هـ، إشبيلية 646هـ) • تأسيس مملكة غرناطة النصرية على يد بني الأحمر"
+    },
+    {
+        century: 8,
+        title: "القرن الثامن الهجري",
+        gregorian: "1301م – 1398م",
+        gulf: "أوج ازدهار بني رسول في اليمن وعاصمتهم تعز • بنو نبهان في عمان • ازدهار موانئ قلهات وجلفار وهرمز",
+        sham: "دحر بقايا الغزو الإيلخاني المغولي في معركة شقحب (702هـ) • استقرار الشام كنيابات تابعة لسلطنة المماليك بمصر",
+        egypt: "العصر الذهبي للمماليك البحرية (سلطنة الناصر محمد بن قلاوون) • نهضة عمرانية وثقافية وتجارية غير مسبوقة",
+        maghreb: "صراع بني مرين في المغرب وبني زيان بتلمسان • أوج الدولة الحفصية في تونس ونهضة العلوم ومقدمة ابن خلدون",
+        andalus: "مملكة غرناطة في ذروة تألقها الحضاري والمعماري • تشييد قصر الحمراء وجنة العريف (يوسف الأول والغني بالله)"
+    },
+    {
+        century: 9,
+        title: "القرن التاسع الهجري",
+        gregorian: "1398م – 1495م",
+        gulf: "نهاية الدولة الرسولية وقيام دولة بني طاهر في اليمن (858هـ) • وصول البرتغاليين (فاسكو دا غاما) للمحيط والخليج",
+        sham: "اجتياح تيمورلنك وتخريب دمشق وحلب (803هـ) • استعادة سلاطين المماليك لدمشق وإعادة إعمارها",
+        egypt: "دولة المماليك البرجية (الشراكسة): برقوق، برسباي، قايتباي • صراعات داخلية وتأثر التجارة بطريق رأس الرجاء الصالح",
+        maghreb: "سقوط دولة بني مرين وظهور بني وطاس بالمغرب الأقصى • بداية استيلاء البرتغاليين والإسبان على ثغور المغرب (سبتة 818هـ)",
+        andalus: "حصار غرناطة • سقوط مملكة غرناطة آخر معاقل المسلمين بالأندلس (897هـ / 1492م) وخروج أبي عبد الله الصغير"
+    },
+    {
+        century: 10,
+        title: "القرن العاشر الهجري",
+        gregorian: "1495م – 1592م",
+        gulf: "الغزو البرتغالي لموانئ عمان والخليج وسقوط هرمز ومسقط • مقاومة القبائل العربية والتحالفات المحلية",
+        sham: "معركة مرج دابق (922هـ/1516م) وسقوط الشام تحت الحكم العثماني (السلطان سليم الأول) • تحويلها لولايات عثمانية",
+        egypt: "معركة الريدانية (923هـ/1517م) وإعدام طومان باي • انتهاء دولة المماليك وتحول مصر إلى إيالة عثمانية",
+        maghreb: "ظهور الأشراف السعديين في المغرب ومعركة وادي المخازن (986هـ) • دخول العثمانيين للجزائر وتونس وطرابلس (خير الدين بربروس)",
+        andalus: "تنصير الموريسكيين قسراً ومحاكم التفتيش • ثورة البشرات الكبرى (976هـ) وقمعها العنيف من القوات الإسبانية"
+    },
+    {
+        century: 11,
+        title: "القرن الحادي عشر الهجري",
+        gregorian: "1592م – 1689م",
+        gulf: "قيام دولة اليعاربة في عمان (1034هـ بقيادة ناصر بن مرشد) • طرد البرتغاليين وبناء أسطول بحري عماني عظيم • قيام الدولة الزيدية باليمن",
+        sham: "عهد الولاة العثمانيين وظهور الإمارات المحلية (فخر الدين المعني الثاني في جبل لبنان) • تأمين قوافل الحج الشامي",
+        egypt: "إيالة مصر العثمانية وصعود نفوذ بكوات المماليك وصراعهم مع الباشوات والولاة المعينين من الآستانة",
+        maghreb: "انتقال الحكم في المغرب إلى الدولة العلوية الشريفة (المولى الرشيد والمولى إسماعيل) • استقرار بايات تونس ودايات الجزائر",
+        andalus: "القرار الإسباني الملكي النهائي بطرد الموريسكيين كلياً (1018هـ/1609م) وهجرتهم الجماعية إلى بلاد المغرب والشرق"
+    },
+    {
+        century: 12,
+        title: "القرن الثاني عشر الهجري",
+        gregorian: "1689م – 1786م",
+        gulf: "قيام دولة آل بوسعيد في عمان (1157هـ بقيادة أحمد بن سعيد) • قيام الدولة السعودية الأولى وتحالف الدرعية (1157هـ/1744م) • استقرار بني خالد وآل صباح في الكويت وآل خليفة في البحرين",
+        sham: "حكم آل العظم في دمشق وحماة • الإمارة الشهابية في لبنان • حركة الشيخ ظاهر العمر الزيداني في عكا وشمال فلسطين",
+        egypt: "حركة علي بك الكبير الاستقلالية (1182هـ) ومحاولة الانفصال عن العثمانيين وضم الشام والحجاز قبل خيانة محمد بك أبو الذهب",
+        maghreb: "استقرار الدولة العلوية بالمغرب الأقصى (السلطان محمد بن عبد الله) والاعتراف باستقلال أمريكا • استقلال نسبي لدايات الجزائر وبايات تونس",
+        andalus: "اندثار الوجود الإسلامي الظاهر في شبه الجزيرة الإيبيرية بعد قرون من المحاكم والتهجير"
+    },
+    {
+        century: 13,
+        title: "القرن الثالث عشر الهجري",
+        gregorian: "1786م – 1883م",
+        gulf: "الدولة السعودية الثانية في نجد (تركي بن عبد الله وفيصل بن تركي) • معاهدات السلم البحري البريطانية مع إمارات الساحل • أوج إمبراطورية زنجبار وعمان (سعيد بن سلطان)",
+        sham: "حملة إبراهيم باشا بن محمد علي على الشام (1831م - 1840م) • أحداث 1860 ونظام متصرفية جبل لبنان • يقظة فكرية وأدبية",
+        egypt: "الحملة الفرنسية (1798م) • قيام دولة محمد علي الحديثة والنهضة الصناعية • افتتاح قناة السويس (1869م) • الاحتلال البريطاني لمصر (1882م)",
+        maghreb: "الاحتلال الفرنسي للجزائر (1830م) ومقاومة الأمير عبد القادر الجزائري • معاهدة باردو واحتلال تونس (1881م) • الضغوط على المغرب",
+        andalus: "حضور الأندلس كأيقونة وجدانية في الأدب العربي الحديث وتأثير الموسيقى والعمارة الأندلسية بالمغرب"
+    },
+    {
+        century: 14,
+        title: "القرن الرابع عشر الهجري",
+        gregorian: "1883م – 1980م / حتى 2010م",
+        gulf: "تأسيس المملكة العربية السعودية على يد الملك عبد العزيز آل سعود (1351هـ/1932م) • تدفق النفط • استقلال الكويت (1961م) والبحرين وقطر وقيام اتحاد دولة الإمارات العربية المتحدة (1971م)",
+        sham: "الثورة العربية الكبرى (1916م) • نهاية الحكم العثماني • سايكس بيكو والانتداب الفرنسي والبريطاني • استقلال سوريا ولبنان والأردن • القضية الفلسطينية",
+        egypt: "ثورة 1919 واستقلال مصر • ثورة 23 يوليو 1952 وإعلان الجمهورية • تأميم قناة السويس وحرب 1956 وحرب أكتوبر 1973 المجيدة",
+        maghreb: "حركات التحرر الوطني الكبرى • ثورة التحرير الجزائرية المليون شهيد (1954 - 1962م) • استقلال ليبيا (1951م) والمغرب وتونس (1956م) وموريتانيا (1960م)",
+        andalus: "التراث الأندلسي كجزء أصيل حي في ذاكرة وهوية وثقافة الأمة العربية والإسلامية"
+    }
+];
+
+function renderCards(data) {
+    const container = document.getElementById('cardsView');
+    container.innerHTML = '';
+    if (data.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">لم يتم العثور على نتائج مطابقة للبحث.</div>';
+        return;
+    }
+    data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'century-card';
+        card.innerHTML = `
+            <div class="card-header">
+                <span class="century-name">${item.title}</span>
+                <span class="century-date">${item.gregorian}</span>
+            </div>
+            <div class="card-body">
+                <div class="region-item gulf">
+                    <div class="region-title">🌴 الجزيرة العربية والخليج واليمن</div>
+                    <div class="dynasties-list">${item.gulf}</div>
+                </div>
+                <div class="region-item sham">
+                    <div class="region-title">🏰 الهلال الخصيب (العراق والشام)</div>
+                    <div class="dynasties-list">${item.sham}</div>
+                </div>
+                <div class="region-item egypt">
+                    <div class="region-title">🌊 مصر والسودان</div>
+                    <div class="dynasties-list">${item.egypt}</div>
+                </div>
+                <div class="region-item maghreb">
+                    <div class="region-title">🏔️ المغرب العربي</div>
+                    <div class="dynasties-list">${item.maghreb}</div>
+                </div>
+                <div class="region-item andalus">
+                    <div class="region-title">🕌 الأندلس</div>
+                    <div class="dynasties-list">${item.andalus}</div>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderMatrix(data) {
+    const tbody = document.getElementById('matrixBody');
+    tbody.innerHTML = '';
+    data.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <strong>${item.title}</strong>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">${item.gregorian}</div>
+            </td>
+            <td>${item.gulf}</td>
+            <td>${item.sham}</td>
+            <td>${item.egypt}</td>
+            <td>${item.maghreb}</td>
+            <td>${item.andalus}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function selectCentury(centuryNum) {
+    document.querySelectorAll('.century-pill').forEach(pill => pill.classList.remove('active'));
+    if (event) event.currentTarget.classList.add('active');
+
+    if (centuryNum === 'all') {
+        renderCards(centuriesData);
+        renderMatrix(centuriesData);
+    } else {
+        const filtered = centuriesData.filter(c => c.century === centuryNum);
+        renderCards(filtered);
+        renderMatrix(filtered);
+    }
+}
+
+function filterData() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!query) {
+        renderCards(centuriesData);
+        renderMatrix(centuriesData);
+        return;
+    }
+
+    const filtered = centuriesData.filter(item => {
+        return item.title.includes(query) ||
+               item.gregorian.includes(query) ||
+               item.gulf.includes(query) ||
+               item.sham.includes(query) ||
+               item.egypt.includes(query) ||
+               item.maghreb.includes(query) ||
+               item.andalus.includes(query);
+    });
+
+    renderCards(filtered);
+    renderMatrix(filtered);
+}
+
+function switchView(viewName) {
+    document.querySelectorAll('.view-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+    if (event) event.currentTarget.classList.add('active');
+
+    document.getElementById('cardsView').style.display = (viewName === 'cards') ? 'grid' : 'none';
+    document.getElementById('matrixView').style.display = (viewName === 'matrix') ? 'block' : 'none';
+    document.getElementById('posterView').style.display = (viewName === 'poster') ? 'block' : 'none';
+}
+
+// Initial render
+renderCards(centuriesData);
+renderMatrix(centuriesData);
+</script>
+
+</body>
+</html>
