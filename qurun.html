@@ -356,7 +356,7 @@
         <div class="view-tabs">
             <button class="tab-btn active" onclick="switchView('cards')">📑 بطاقات القرون</button>
             <button class="tab-btn" onclick="switchView('matrix')">📊 المصفوفة الجغرافية</button>
-            <button class="tab-btn" onclick="switchView('poster')">🖼️ الوثيقة الأصلية (البوستر)</button>
+            <a class="tab-btn" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">🗺️ المخطط التفاعلي الكامل</a>
         </div>
     </div>
 
@@ -394,14 +394,6 @@
             </thead>
             <tbody id="matrixBody"></tbody>
         </table>
-    </div>
-
-    <div id="posterView" class="poster-viewer">
-        <h3 style="color: var(--gold-light); margin-bottom: 12px;">الوثيقة التاريخية الأصلية لمجلة «العربي»</h3>
-        <p style="color: var(--text-muted); margin-bottom: 18px;">المخطط البانورامي التوثيقي كاملاً كما نشر في عدد يناير 2010.</p>
-        <a href="poster.jpg" target="_blank" title="انقر لفتح الصورة بدقة كاملة">
-            <img src="poster.jpg" alt="بوستر تاريخ الوطن العربي خلال 14 قرناً" class="poster-img">
-        </a>
     </div>
 
     <footer>
@@ -659,7 +651,6 @@ function switchView(viewName) {
 
     document.getElementById('cardsView').style.display = (viewName === 'cards') ? 'grid' : 'none';
     document.getElementById('matrixView').style.display = (viewName === 'matrix') ? 'block' : 'none';
-    document.getElementById('posterView').style.display = (viewName === 'poster') ? 'block' : 'none';
 }
 
 // Initial render
